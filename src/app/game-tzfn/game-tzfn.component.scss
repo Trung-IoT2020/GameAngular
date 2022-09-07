@@ -1,0 +1,106 @@
+* {
+  box-sizing: border-box;
+}
+
+.field {
+  display: flex;
+  flex-wrap: wrap;
+  height: 500px;
+  width: 500px;
+  flex-basis: 500px;
+  border: 4px solid #6e3939;
+  border-radius: 7px;
+  background: #6e3939;
+  margin-bottom: 30px;
+}
+
+.place__line {
+  display: flex;
+  width: 100%;
+}
+
+.place__elem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 38px;
+  line-height: 0;
+  font-family: Roboto;
+  height: 100%;
+  width: 25%;
+  border: 4px solid #6e3939;
+  background: #aaaaaa;
+  border-radius: 5px;
+}
+
+.control-panel {
+  width: 50%;
+  margin: 0 auto 0 40px;
+  padding: 0;
+  list-style: none;
+}
+
+.control-panel li {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.control-Panel > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 33.33%;
+  height: 33.33%;
+}
+
+.control-Panel button {
+  background: none;
+  padding: 0;
+}
+
+.control-Panel button:after {
+  content: '';
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background: red;
+}
+
+.gameOver__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background: rgba(222, 222, 222, 0.7);
+}
+
+.gameOver {
+  text-align: center;
+  background: #ffffff;
+  padding: 80px;
+  font-size: 24px;
+  color: #0c596e;
+  border-radius: 15px;
+}
+
+.gameOver span {
+  font-size: 32px;
+  margin-left: 20px;
+}
+
+.gameOver p {
+  font-size: 48px;
+}
+
+@media screen and (max-width: 500px) {
+  .field {
+    height: auto;
+    max-height: 500px;
+    width: 100%;
+    max-width: 500px;
+  }
+}

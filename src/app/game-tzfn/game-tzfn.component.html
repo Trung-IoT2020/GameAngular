@@ -1,0 +1,25 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="field">
+  <div class="place__line" *ngFor="let place of places">
+    <div class="place__elem" *ngFor="let pl of place" [style.background-color]="pl ? 'rgb(233,233,233)' : null">
+      {{pl}}
+    </div>
+  </div>
+</div>
+
+<ul class="control-panel">
+  <li><b>2048</b></li>
+  <li>Join the numbers and get to the 2048 tile!</li>
+  <li>HOW TO PLAY: Use your arrow keys to move the tiles.<br> When two tiles with the same number touch, they merge into
+    one!
+  </li>
+</ul>
+
+<div class="gameOver__bg">
+  <div class="gameOver">
+    <p>Game Over!</p>
+    new game in <span class="newGameTime">3</span>
+  </div>
+</div>
+
+
