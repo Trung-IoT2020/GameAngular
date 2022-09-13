@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ElementRef, Renderer2, HostListener} from '@angular/core';
 
 @Component({
   selector: 'app-game-tzfn',
@@ -6,6 +6,16 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./game-tzfn.component.scss']
 })
 export class GameTzfnComponent implements OnInit {
+  gameOver = false;
+  x: number;
+  y: number;
+  defaultTouch = {x: 0, y: 0, time: 0};
+  sumCount = 0;
+
+  constructor(public renderer: Renderer2, private el: ElementRef) {
+  }
+
+
   public placesDefault: any[] = [
     [2, '', '', ''],
     ['', '', '', ''],
@@ -32,28 +42,128 @@ export class GameTzfnComponent implements OnInit {
   public clickActive = false;
   public indexAddNumber = {x: 0, y: 0};
 
-  constructor() {
+
+  @HostListener('touchstart', ['$event'])
+  @HostListener('touchend', ['$event'])
+  @HostListener('touchcancel', ['$event'])
+  handleTouch(event: any): any {
+    const touch = event.touches[0] || event.changedTouches[0];
+    if (event.type === 'touchstart') {
+      this.defaultTouch.x = touch.pageX;
+      this.defaultTouch.y = touch.pageY;
+      this.defaultTouch.time = event.timeStamp;
+    } else if (event.type === 'touchend') {
+      const deltaX = touch.pageX - this.defaultTouch.x;
+      const deltaY = touch.pageY - this.defaultTouch.y;
+      const deltaTime = event.timeStamp - this.defaultTouch.time;
+
+      // simulte a swipe -> less than 500 ms and more than 60 px
+      if (deltaTime < 500) {
+        // touch movement lasted less than 500 ms
+        if (Math.abs(deltaX) > 60) {
+          // delta x is at least 60 pixels
+          if (deltaX > 0) {
+            this.doSwipeRight(event);
+          } else {
+            this.doSwipeLeft(event);
+          }
+        }
+
+        if (Math.abs(deltaY) > 60) {
+          // delta y is at least 60 pixels
+          if (deltaY > 0) {
+            this.doSwipeDown(event);
+          } else {
+            this.doSwipeUp(event);
+          }
+        }
+      }
+    }
+  }
+
+  doSwipeLeft(event): any {
+    // console.log('swipe left', event);
+    if (!this.win || !this.gameOver) {
+      this.clickLimit();
+      this.swipe(3);
+
+    }
+  }
+
+  doSwipeRight(event): any {
+    // console.log('swipe right', event);
+    if (!this.win || !this.gameOver) {
+      this.clickLimit();
+      this.swipe(1);
+    }
+  }
+
+  doSwipeUp(event): any {
+    // console.log('swipe up', event);
+    if (!this.win || !this.gameOver) {
+      this.clickLimit();
+      this.swipe(0);
+    }
+  }
+
+  doSwipeDown(event): any {
+    // console.log('swipe down', event);
+    if (!this.win || !this.gameOver) {
+      this.clickLimit();
+      this.swipe(2);
+    }
+  }
+
+  color(e: any): any {
+    console.log(e);
+    if (e === 2) {
+      return 'rgb(233,233,233)';
+    } else if (e === 4) {
+      return '#ede0c8';
+    } else if (e === 8) {
+      return '#f2b179';
+    } else if (e === 16) {
+      return '#3498db';
+    } else if (e === 32) {
+      return '#2ecc71';
+    } else if (e === 64) {
+      return '#f1c40f';
+    } else if (e === 128) {
+      return '#3498db';
+    } else if (e === 256) {
+      return '#2ecc71';
+    } else if (e === 512) {
+      return '#7FC400';
+    } else if (e === 1024) {
+      return '#FFD583';
+    } else if (e === 2048) {
+      return 'red';
+    } else {
+      return 'rgb(233,233,233)';
+    }
+    // return 'red';
   }
 
   ngOnInit(): void {
     this.addNumber();
     document.addEventListener('keydown', (e) => {
-      if (!this.clickActive && e.keyCode === 37 || e.keyCode === 100) { // left
-        this.clickLimit();
-        this.swipe(3);
-      } else if (!this.clickActive && e.keyCode === 38 || e.keyCode === 104) { // up
-        this.clickLimit();
-        this.swipe(0);
-      } else if (!this.clickActive && e.keyCode === 39 || e.keyCode === 102) { // right
-        this.clickLimit();
-        this.swipe(1);
-      } else if (!this.clickActive && e.keyCode === 40 || e.keyCode === 98) { // down
-        this.clickLimit();
-        this.swipe(2);
+      if (!this.win || !this.gameOver) {
+        if (!this.clickActive && e.keyCode === 37 || e.keyCode === 100) { // left
+          this.clickLimit();
+          this.swipe(3);
+        } else if (!this.clickActive && e.keyCode === 38 || e.keyCode === 104) { // up
+          this.clickLimit();
+          this.swipe(0);
+        } else if (!this.clickActive && e.keyCode === 39 || e.keyCode === 102) { // right
+          this.clickLimit();
+          this.swipe(1);
+        } else if (!this.clickActive && e.keyCode === 40 || e.keyCode === 98) { // down
+          this.clickLimit();
+          this.swipe(2);
+        }
       }
     });
   }
-
 
   addNumber(): any {
     // tslint:disable-next-line:variable-name
@@ -125,7 +235,6 @@ export class GameTzfnComponent implements OnInit {
     }
   }
 
-
   filterElem(y, x, next, act): any {
     const tile = this.cells({y, x});
     if (tile) {
@@ -134,6 +243,7 @@ export class GameTzfnComponent implements OnInit {
       act.call(this, y, x, next, cell);
     }
   }
+
   cellTransition(y, x, next, cell): any {
     if (cell && this.places[y][x] && !this.places[y + next.y][x + next.x]) {
 
@@ -143,23 +253,22 @@ export class GameTzfnComponent implements OnInit {
       this.numberAdded = true;
 
     } else if (cell && this.places[y][x] === this.places[y + next.y][x + next.x]) {
-
       this.cellsConnect = true;
     }
   }
 
+
   cellConnect(y, x, next, cell): any {
-    if (
-      cell &&
-      this.places[y][x] &&
-      this.places[y][x] === this.places[y + next.y][x + next.x]
-    ) {
+    if (cell && this.places[y][x] && this.places[y][x] === this.places[y + next.y][x + next.x]) {
+      console.log(this.sumCount, this.places[y][x]);
       this.places[y + next.y][x + next.x] += this.places[y][x];
+      this.sumCount += this.places[y][x];
       this.places[y][x] = '';
       this.numberAdded = true;
     }
     if (cell && this.places[y + next.y][x + next.x] === 2048) {
       this.win = true;
+
     }
   }
 
@@ -190,36 +299,37 @@ export class GameTzfnComponent implements OnInit {
       this.indexAddNumber = this.addNumber();
     }
     if (this.checkFreeCells() === -1 && !this.checkMoves(this.indexAddNumber, this.pl)) {
-      this.timerNewGame();
+      console.log('Fail');
+      this.gameOver = true;
     }
   }
 
-  timerNewGame(): any {
-
-
-    this.myTimerfunc.call(this);
-    this.myTimerfunc();
-
-
-    this.closePopup();
-  }
-
-  myTimerfunc(): any {
-    setTimeout(this.closePopup.bind(this), 1000);
-  }
 
   closePopup(): any {
-    const over: HTMLElement = document.getElementsByClassName('gameOver__bg')[0] as HTMLElement;
-    over.style.display = 'flex';
-    let time = 3;
-    time -= 1;
-    document.getElementsByClassName('newGameTime')[0].innerHTML = (time.toString());
-    if (time < 0) {
-      over.style.display = 'none';
-      this.places = this.placesDefault;
-    } else {
-      this.myTimerfunc.call(this);
-    }
+    this.places = [];
+    this.placesDefault = [
+      [2, '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', '']
+    ];
+    this.places = [
+      [2, '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', '']
+    ];
+    this.pl = {
+      0: {x: 0, y: -1}, // up
+      1: {x: 1, y: 0}, // right
+      2: {x: 0, y: 1}, // down
+      3: {x: -1, y: 0} // left
+    };
+    this.addNumber();
+    this.win = false;
+    this.gameOver = false;
+    this.sumCount = 0;
+
   }
 
   checkMoves(el: any, pl: any): any {
@@ -242,5 +352,4 @@ export class GameTzfnComponent implements OnInit {
   victory(): any {
     console.log('you victory');
   }
-
 }

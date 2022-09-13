@@ -1,25 +1,97 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div class="field">
-  <div class="place__line" *ngFor="let place of places">
-    <div class="place__elem" *ngFor="let pl of place" [style.background-color]="pl ? 'rgb(233,233,233)' : null">
-      {{pl}}
+<div class="background-full">
+  <div class="heading" style="    margin-bottom: 20px;display: flex">
+    <h1 class="title" style="width: 70%"><a href="/" style="    color: #776e65;
+    font-weight: 700;">2048</a></h1>
+    <h4 style="    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}">Score: {{sumCount}}</h4>
+  </div>
+  <div class="game-intro" style=" width: 100%!important;">
+    <a class="restart-button"
+       style="
+      width: 35%;
+    box-sizing: border-box;
+    margin-top: 2px;
+    background: #8f7a66;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #f9f6f2;
+    height: 40px;
+    line-height: 42px;
+    display: block;
+    text-align: center;
+    float: right;
+}" (click)="closePopup()">New Game</a>
+    <div style="width: 60%">
+      <h2 class="subtitle">Chơi <strong>Game 2048</strong></h2>
+      <h4>Tham gia các con số và đến <strong>2048!</strong></h4>
+    </div>
+
+  </div>
+
+  <div class="field">
+    <div class="place__line" *ngFor="let place of places">
+      <div  class="place__elem"  *ngFor="let pl of place" [style.background-color]="pl ? color(pl) : null">
+        <div>
+          {{pl}}
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
+<div class="popup-noti-order" [ngClass]="win ? 'show' : ''">
+  <a class="bg" (click)="win = false"></a>
+  <div class="content-popup">
+    <a class="button-close" (click)="win = false">
+      <img
+        src="https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/sale-hifpt/btn-close-popup.svg"
+        alt=""
+        width="auto"
+        height="auto"
+      />
+    </a>
+    <div class="title"><h3> Game Win!</h3></div>
+    <div class="content">
+      <div class="row name-event">
+        <span>Tổng điểm bạn đã kiếm được: {{sumCount}}</span>
+      </div>
+    </div>
+    <div class="bottom">
 
-<ul class="control-panel">
-  <li><b>2048</b></li>
-  <li>Join the numbers and get to the 2048 tile!</li>
-  <li>HOW TO PLAY: Use your arrow keys to move the tiles.<br> When two tiles with the same number touch, they merge into
-    one!
-  </li>
-</ul>
+      <div class="col-done" (click)="win = false">Đóng</div>
+      <div class="col-reset" (click)="closePopup()"> Chơi lại</div>
 
-<div class="gameOver__bg">
-  <div class="gameOver">
-    <p>Game Over!</p>
-    new game in <span class="newGameTime">3</span>
+    </div>
+
   </div>
 </div>
+<div class="popup-noti-order" [ngClass]="gameOver ? 'show' : ''">
+  <a class="bg" (click)="gameOver = false"></a>
+  <div class="content-popup">
+    <a class="button-close" (click)="gameOver = false">
+      <img
+        src="https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/sale-hifpt/btn-close-popup.svg"
+        alt=""
+        width="auto"
+        height="auto"
+      />
+    </a>
+    <div class="title"><h3> Game Over!</h3></div>
+    <div class="content">
+      <div class="row name-event">
+        <span>Tổng điểm bạn đã kiếm được: {{sumCount}}</span><br>
+        <span>Hãy cố gắng thêm nha!</span>
+      </div>
+    </div>
+    <div class="bottom">
 
+      <div class="col-done" (click)="gameOver = false">Đóng</div>
+      <div class="col-reset" (click)="closePopup()"> Chơi lại</div>
 
+    </div>
+
+  </div>
+</div>

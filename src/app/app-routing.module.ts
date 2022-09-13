@@ -6,6 +6,7 @@ import {GameTzfnComponent} from './game-tzfn/game-tzfn.component';
 import {FishEatBubblesComponent} from './fish-eat-bubbles/fish-eat-bubbles.component';
 import {FishEatComponent} from './fish-eat/fish-eat.component';
 import {VariableSmoothStepComponent} from './variable-smooth-step/variable-smooth-step.component';
+import {DrawCurveComponent} from './draw-curve/draw-curve.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
       {path: 'fish-test', component: FishEatComponent},
       {path: '2048', component: GameTzfnComponent},
       {path: 'cannon-smooth', component: VariableSmoothStepComponent},
+      {path: 'draw-curve', component: DrawCurveComponent},
 
     ]
   },
