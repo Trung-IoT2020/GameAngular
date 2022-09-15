@@ -6,14 +6,15 @@ import {Component, OnInit, ElementRef, Renderer2, HostListener} from '@angular/c
   styleUrls: ['./game-tzfn.component.scss']
 })
 export class GameTzfnComponent implements OnInit {
+
+  constructor(public renderer: Renderer2, private el: ElementRef) {
+  }
+
   gameOver = false;
   x: number;
   y: number;
   defaultTouch = {x: 0, y: 0, time: 0};
   sumCount = 0;
-
-  constructor(public renderer: Renderer2, private el: ElementRef) {
-  }
 
 
   public placesDefault: any[] = [
@@ -42,6 +43,16 @@ export class GameTzfnComponent implements OnInit {
   public clickActive = false;
   public indexAddNumber = {x: 0, y: 0};
 
+  level = 0;
+
+
+  mm = 0;
+  ss = 0;
+  ms = 0;
+  isRunning = false;
+  timerId = 0;
+
+  controllerPlayer = true;
 
   @HostListener('touchstart', ['$event'])
   @HostListener('touchend', ['$event'])
@@ -115,7 +126,6 @@ export class GameTzfnComponent implements OnInit {
   }
 
   color(e: any): any {
-    console.log(e);
     if (e === 2) {
       return 'rgb(233,233,233)';
     } else if (e === 4) {
@@ -127,9 +137,9 @@ export class GameTzfnComponent implements OnInit {
     } else if (e === 32) {
       return '#2ecc71';
     } else if (e === 64) {
-      return '#f1c40f';
+      return '#C78D50';
     } else if (e === 128) {
-      return '#3498db';
+      return '#C7C550';
     } else if (e === 256) {
       return '#2ecc71';
     } else if (e === 512) {
@@ -138,6 +148,10 @@ export class GameTzfnComponent implements OnInit {
       return '#FFD583';
     } else if (e === 2048) {
       return 'red';
+    } else if (e === 4096) {
+      return '#B550C7';
+    } else if (e === 8192) {
+      return '#50B5C7';
     } else {
       return 'rgb(233,233,233)';
     }
@@ -147,7 +161,7 @@ export class GameTzfnComponent implements OnInit {
   ngOnInit(): void {
     this.addNumber();
     document.addEventListener('keydown', (e) => {
-      if (!this.win || !this.gameOver) {
+      if ((!this.win || !this.gameOver) && this.controllerPlayer) {
         if (!this.clickActive && e.keyCode === 37 || e.keyCode === 100) { // left
           this.clickLimit();
           this.swipe(3);
@@ -257,17 +271,40 @@ export class GameTzfnComponent implements OnInit {
     }
   }
 
-
   cellConnect(y, x, next, cell): any {
     if (cell && this.places[y][x] && this.places[y][x] === this.places[y + next.y][x + next.x]) {
-      console.log(this.sumCount, this.places[y][x]);
       this.places[y + next.y][x + next.x] += this.places[y][x];
       this.sumCount += this.places[y][x];
       this.places[y][x] = '';
       this.numberAdded = true;
     }
-    if (cell && this.places[y + next.y][x + next.x] === 2048) {
-      this.win = true;
+    if (cell) {
+      if (this.level === 0 && this.places[y + next.y][x + next.x] === 2) {
+        this.level = 1;
+        this.clickHandler();
+      } else if (this.level === 1 && this.places[y + next.y][x + next.x] === 32) {
+        this.level = 2;
+      } else if (this.level === 2 && this.places[y + next.y][x + next.x] === 128) {
+        this.level = 3;
+      } else if (this.level === 3 && this.places[y + next.y][x + next.x] === 256) {
+        this.level = 4;
+      } else if (this.level === 4 && this.places[y + next.y][x + next.x] === 512) {
+        this.level = 5;
+      } else if (this.level === 5 && this.places[y + next.y][x + next.x] === 1024) {
+        this.level = 6;
+      } else if (this.level === 6 && this.places[y + next.y][x + next.x] === 2048) {
+        this.level = 7;
+      } else if (this.level === 7 && this.places[y + next.y][x + next.x] === 4096) {
+        this.level = 8;
+      } else if (this.level === 8 && this.places[y + next.y][x + next.x] === 8192) {
+        this.level = 9;
+      } else if (this.level === 9 && this.places[y + next.y][x + next.x] === 16384) {
+        this.level = 10;
+        this.win = true;
+        this.isRunning = true;
+        this.clickHandler();
+      }
+
 
     }
   }
@@ -278,7 +315,6 @@ export class GameTzfnComponent implements OnInit {
 
   swipe(action): any {
     this.numberAdded = false;
-
     if (action === 0 || action === 3) {
       this.filterEmptyElem(this.pl[action], this.cellTransition);
       if (this.cellsConnect) {
@@ -301,35 +337,49 @@ export class GameTzfnComponent implements OnInit {
     if (this.checkFreeCells() === -1 && !this.checkMoves(this.indexAddNumber, this.pl)) {
       console.log('Fail');
       this.gameOver = true;
+      this.isRunning = true;
+      this.clickHandler();
     }
   }
 
 
-  closePopup(): any {
-    this.places = [];
-    this.placesDefault = [
-      [2, '', '', ''],
-      ['', '', '', ''],
-      ['', '', '', ''],
-      ['', '', '', '']
-    ];
-    this.places = [
-      [2, '', '', ''],
-      ['', '', '', ''],
-      ['', '', '', ''],
-      ['', '', '', '']
-    ];
-    this.pl = {
-      0: {x: 0, y: -1}, // up
-      1: {x: 1, y: 0}, // right
-      2: {x: 0, y: 1}, // down
-      3: {x: -1, y: 0} // left
-    };
-    this.addNumber();
-    this.win = false;
-    this.gameOver = false;
-    this.sumCount = 0;
-
+  closePopup(i): any {
+    if (i === 1) {
+      this.mm = 0;
+      this.ss = 0;
+      this.ms = 0;
+      this.level = 0;
+      this.isRunning = false;
+      this.timerId = 0;
+      this.places = [];
+      this.placesDefault = [
+        [2, '', '', ''],
+        ['', '', '', ''],
+        ['', '', '', ''],
+        ['', '', '', '']
+      ];
+      this.places = [
+        [2, '', '', ''],
+        ['', '', '', ''],
+        ['', '', '', ''],
+        ['', '', '', '']
+      ];
+      this.pl = {
+        0: {x: 0, y: -1}, // up
+        1: {x: 1, y: 0}, // right
+        2: {x: 0, y: 1}, // down
+        3: {x: -1, y: 0} // left
+      };
+      this.addNumber();
+      this.win = false;
+      this.gameOver = false;
+      this.sumCount = 0;
+      this.controllerPlayer = true;
+    } else {
+      this.controllerPlayer = false;
+      this.win = false;
+      this.gameOver = false;
+    }
   }
 
   checkMoves(el: any, pl: any): any {
@@ -351,5 +401,30 @@ export class GameTzfnComponent implements OnInit {
 
   victory(): any {
     console.log('you victory');
+  }
+
+  clickHandler(): any {
+    if (!this.isRunning) {
+      // Stop => Running
+      this.timerId = setInterval(() => {
+        this.ms++;
+
+        if (this.ms >= 100) {
+          this.ss++;
+          this.ms = 0;
+        }
+        if (this.ss >= 60) {
+          this.mm++;
+          this.ss = 0;
+        }
+      }, 10);
+    } else {
+      clearInterval(this.timerId);
+    }
+    this.isRunning = !this.isRunning;
+  }
+
+  format(num: number): any {
+    return (num + '').length === 1 ? '0' + num : num + '';
   }
 }

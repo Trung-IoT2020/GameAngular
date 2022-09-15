@@ -1,13 +1,4 @@
 <div class="background-full">
-  <div class="heading" style="    margin-bottom: 20px;display: flex">
-    <h1 class="title" style="width: 70%"><a href="/" style="    color: #776e65;
-    font-weight: 700;">2048</a></h1>
-    <h4 style="    text-align: center;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-}">Score: {{sumCount}}</h4>
-  </div>
   <div class="game-intro" style=" width: 100%!important;">
     <a class="restart-button"
        style="
@@ -23,17 +14,26 @@
     display: block;
     text-align: center;
     float: right;
-}" (click)="closePopup()">New Game</a>
+}" (click)="closePopup(1)">Game mới</a>
     <div style="width: 60%">
       <h2 class="subtitle">Chơi <strong>Game 2048</strong></h2>
       <h4>Tham gia các con số và đến <strong>2048!</strong></h4>
+      <div class="score-level">
+        <h4>Score: {{sumCount}}</h4>
+        <h4>Level: {{level}}</h4>
+
+        <div class="stop-watch">
+          <h4>Time: </h4>
+          <div class="display">{{format(mm)}}:{{format(ss)}}:{{format(ms)}}</div>
+        </div>
+      </div>
     </div>
 
   </div>
 
   <div class="field">
     <div class="place__line" *ngFor="let place of places">
-      <div  class="place__elem"  *ngFor="let pl of place" [style.background-color]="pl ? color(pl) : null">
+      <div class="place__elem" *ngFor="let pl of place" [style.background-color]="pl ? color(pl) : null">
         <div>
           {{pl}}
         </div>
@@ -56,13 +56,14 @@
     <div class="title"><h3> Game Win!</h3></div>
     <div class="content">
       <div class="row name-event">
-        <span>Tổng điểm bạn đã kiếm được: {{sumCount}}</span>
+        <span>Tổng điểm bạn đã kiếm được: {{sumCount}}</span><br>
+        <span>Bạn đạt móc level: {{level}}</span><br>
+        <span>Bạn hoàn thành game trong: {{format(mm)}}:{{format(ss)}}:{{format(ms)}}</span><br>
       </div>
     </div>
     <div class="bottom">
-
-      <div class="col-done" (click)="win = false">Đóng</div>
-      <div class="col-reset" (click)="closePopup()"> Chơi lại</div>
+      <div class="col-done" (click)="closePopup(0)">Đóng</div>
+      <div class="col-reset" (click)="closePopup(1)"> Chơi lại</div>
 
     </div>
 
@@ -83,13 +84,14 @@
     <div class="content">
       <div class="row name-event">
         <span>Tổng điểm bạn đã kiếm được: {{sumCount}}</span><br>
+        <span>Bạn đạt móc level: {{level}}</span><br>
+        <span>Bạn hoàn thành game trong: {{format(mm)}}:{{format(ss)}}:{{format(ms)}}</span><br>
         <span>Hãy cố gắng thêm nha!</span>
       </div>
     </div>
     <div class="bottom">
-
-      <div class="col-done" (click)="gameOver = false">Đóng</div>
-      <div class="col-reset" (click)="closePopup()"> Chơi lại</div>
+      <div class="col-done" (click)="closePopup(0)">Đóng</div>
+      <div class="col-reset" (click)="closePopup(1)"> Chơi lại</div>
 
     </div>
 

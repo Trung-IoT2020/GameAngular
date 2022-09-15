@@ -1,1 +1,28 @@
-<p>draw-curve works!</p>
+<div class="popup-noti-order" [ngClass]="gameWin==='YOU WIN' || gameWin==='YOU' ? 'show' : ''">
+  <a class="bg" (click)="gameWin=''"></a>
+  <div class="content-popup">
+    <a class="button-close" (click)="gameWin =''">
+      <img
+        src="https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/sale-hifpt/btn-close-popup.svg"
+        alt=""
+        width="auto"
+        height="auto"
+      />
+    </a>
+    <div class="title"><h3> Game Win!</h3></div>
+    <div class="content">
+      <div class="row name-event">
+        <span>Tổng điểm bạn đã kiếm được: {{sumCount}}</span><br>
+        <span>Trong khoảng thời gian là : {{timeCount}}</span><br>
+        <span>Hãy thử lại nha!</span>
+      </div>
+    </div>
+    <div class="bottom">
+
+      <div class="col-done" (click)="gameWin =''">Đóng</div>
+      <div class="col-reset" (click)="closePopup()"> Chơi lại</div>
+
+    </div>
+
+  </div>
+</div>

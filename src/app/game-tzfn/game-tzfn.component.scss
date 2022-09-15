@@ -1,9 +1,37 @@
 @media (max-width: 800px) {
   .background-full {
-
     overflow: hidden;
     -webkit-appearance: none;
     margin: auto;
+
+    h2{
+      margin: 0;
+      padding: 0;
+    }
+    h4 {
+      margin: 0;
+      padding: 0;
+    }
+    .stop-watch {
+      font-family: 'Source Code Pro', monospace;
+      text-align: center;
+      font-size: 16px;
+      display: flex;
+    }
+
+    .control {
+      //width: 300px;
+      padding: 5px;
+      margin-top: 15px;
+      font-size: 36px;
+      font-weight: bold;
+      border: 2px solid #f44336;
+      border-radius: 4px;
+      cursor: pointer;
+      outline: none;
+    }
+
+
     @media screen and (max-width: 500px) {
       .field {
         padding: 10px;
@@ -53,6 +81,7 @@
     }
 
     .place__elem {
+
       display: flex;
       justify-content: center;
       align-items: center;
@@ -63,6 +92,10 @@
       border: 4px solid rgba(238, 228, 218, 0.35);
       background: rgba(238, 228, 218, 0.35);
       border-radius: 5px;
+    }
+
+    .place__line:last-child {
+      margin-bottom: 10px !important;
     }
 
     .control-panel {
@@ -223,6 +256,7 @@
     background-color: #000000;
     opacity: 0.5;
   }
+
   @media (min-width: 801px) {
     .content-popup {
       padding: 24px;
