@@ -3,6 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import Phaser from 'phaser';
 import {Cannon} from '../class/cannon';
 import {DrawCurve} from '../class/drawcurve';
+import {mainMenuDrawCurve} from '../class/menu-draw-curve';
 
 @Component({
   selector: 'app-draw-curve',
@@ -12,16 +13,17 @@ import {DrawCurve} from '../class/drawcurve';
 export class DrawCurveComponent implements OnInit {
   phaserGame: Phaser.Game;
   config: Phaser.Types.Core.GameConfig;
-  player1: any;
+  DrawCurve: any;
 
   constructor() {
 
   }
 
-
+  game: Phaser.Game;
   gameWin: any = 'YOUS';
   sumCount: any = 0;
   timeCount: any = 0;
+  mainMenuDrawCurve: any;
 
   getData(): any {
     const keySum = sessionStorage.getItem('sumCount');
@@ -35,40 +37,42 @@ export class DrawCurveComponent implements OnInit {
     requestAnimationFrame(() => this.getData());
   }
 
-  closePopup(): any {
-    this.gameWin = 'YOUS';
-    this.sumCount = 0;
-    sessionStorage.setItem('sumCount', '0');
-    sessionStorage.setItem('gameWin', 'YOUS');
-    this.player1 = new DrawCurve(true);
-    console.log(this.player1);
-  }
-
   ngOnInit(): any {
-    sessionStorage.setItem('sumCount', '0');
-    sessionStorage.setItem('gameWin', 'YOUS');
-
     this.getData();
-    this.player1 = new DrawCurve(false);
+    // this.DrawCurve = new DrawCurve();
+    // this.mainMenuDrawCurve = new mainMenuDrawCurve();
     this.config = {
-      type: Phaser.CANVAS,
-      width: 1024,
-      height: 600,
+      type: Phaser.AUTO,
+      width:  '100vw',
+      height: '100vh',
       backgroundColor: 0x000000,
       pixelArt: true,
       physics: {
         default: 'arcade',
-        arcade: {
-          gravity: {y: 200},
-          debug: false
-        }
+        arcade: {gravity: {y: 100}}
       },
-      scene: [this.player1]
+      scene: [DrawCurve]
     };
-    this.phaserGame = new Phaser.Game(this.config);
-    console.log(this.config);
+    this.game = new Phaser.Game(this.config);
+    window.focus();
+    this.resize();
+    window.addEventListener('resize', this.resize, false);
   }
 
+  resize(): any {
+    const canvas = document.querySelector('canvas');
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const windowRatio = windowWidth / windowHeight;
+    const gameRatio = Number(this.game.config.width) / Number(this.game.config.height);
+    if (windowRatio < gameRatio) {
+      canvas.style.width = windowWidth + 'px';
+      canvas.style.height = (windowWidth / gameRatio) + 'px';
+    } else {
+      canvas.style.width = (windowHeight * gameRatio) + 'px';
+      canvas.style.height = windowHeight + 'px';
+    }
+  }
 
   shakeAndRestart(): any {
     // this.cameras.main.shake(800, 0.01);

@@ -1,0 +1,87 @@
+.BG {
+  height: 97vh;
+  position: relative;
+  width: 97vw;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background-image: url("https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/game-demo/archery/tuonggach.jfif");
+
+
+  .menu-content {
+    height: 70vh;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    .col {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      margin-top: 100px;
+    }
+
+    .title {
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 38px;
+      line-height: 135%;
+      color: #FFFFFF;
+      transform: matrix(0.98, 0.01, -0.2, 1, 0, 0);
+    }
+
+    .nt-title {
+      font-weight: 700;
+      font-size: 30px;
+      line-height: 135%;
+      color: #FFFFFF;
+
+    }
+
+    .image-title {
+      margin-top: 150px;
+    }
+  }
+
+  .menu-bottom {
+    bottom: 0;
+    position: relative;
+    height: 5vh;
+    display: flex;
+    padding: 16px 32px 8px;
+
+    .lux-bottom-left {
+      background: #FFFFFF;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 24px;
+      width: 50%;
+      height: 48px;
+      align-items: center;
+      text-align: center;
+      color: #AAAAAA;
+    }
+
+    .lux-bottom-right {
+      height: 48px;
+      width: 50%;
+      background: #4564ED;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 24px;
+      align-items: center;
+      text-align: center;
+      color: #FFFFFF;
+    }
+
+  }
+
+}
+

@@ -7,6 +7,8 @@ import {FishEatBubblesComponent} from './fish-eat-bubbles/fish-eat-bubbles.compo
 import {FishEatComponent} from './fish-eat/fish-eat.component';
 import {VariableSmoothStepComponent} from './variable-smooth-step/variable-smooth-step.component';
 import {DrawCurveComponent} from './draw-curve/draw-curve.component';
+import {InfiniteRunnerComponent} from './infinite-runner/infinite-runner.component';
+import {MenuTzfnComponent} from './menu-tzfn/menu-tzfn.component';
 
 const routes: Routes = [
   {
@@ -18,6 +20,8 @@ const routes: Routes = [
       {path: '2048', component: GameTzfnComponent},
       {path: 'cannon-smooth', component: VariableSmoothStepComponent},
       {path: 'draw-curve', component: DrawCurveComponent},
+      {path: 'infinite-runner', component: InfiniteRunnerComponent},
+      {path: 'menu-2048', component: MenuTzfnComponent},
 
     ]
   },

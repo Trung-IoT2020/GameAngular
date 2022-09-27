@@ -21,7 +21,7 @@ export class DrawCurve extends Phaser.Scene {
   add!: any;
   physics!: any;
   input!: any;
-  load!: any;
+  load: any;
   camera!: any;
   cameras!: any;
   canvas!: any;
@@ -44,8 +44,8 @@ export class DrawCurve extends Phaser.Scene {
   powerTextTime: any;
 
 
-  constructor(keyRest: any) {
-    super({key: 'game'});
+  constructor() {
+    super('DrawCurve');
     this.tank = null;
     this.header = null;
     this.turret = null;
@@ -53,8 +53,6 @@ export class DrawCurve extends Phaser.Scene {
     this.handRight = null;
     this.scene = null;
     this.arrow = null;
-    this.keyRest = keyRest;
-
 
     this.flame = null;
     this.bullet = null;
@@ -76,14 +74,13 @@ export class DrawCurve extends Phaser.Scene {
   }
 
   preload(): any {
-    this.load.baseURL = '';
     this.load.image('tank', 'https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/game-demo/archery/body2.png');
     this.load.image('turret', 'https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/game-demo/archery/arrow2.png');
     this.load.image('bullet', 'https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/game-demo/archery/arrow1.png');
     this.load.image('background', 'https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/game-demo/archery/BG2.png'); // 992 x 512 image
     this.load.image('flame', 'https://raw.githubusercontent.com/photonstorm/phaser-coding-tips/master/issue-002/assets/flame.png');
     this.load.atlas('flying', 'https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/game-demo/archery/flying5.png', 'https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/game-demo/archery/flying5_atlas.json');
-     this.load.image('target', 'https://raw.githubusercontent.com/photonstorm/phaser-coding-tips/master/issue-002/assets/target.png');
+    this.load.image('target', 'https://raw.githubusercontent.com/photonstorm/phaser-coding-tips/master/issue-002/assets/target.png');
   }
 
 
@@ -116,7 +113,7 @@ export class DrawCurve extends Phaser.Scene {
     this.add.image(0, 0, 'canvastexture').setOrigin(0);
     // thuộc tính globalCompositeOperation đặt hoặc trả về cách một hình ảnh nguồn sáng lên một iamge đích
     // 'đích-out' về cơ bản có nghĩa là một phần của hình ảnh đích được vẽ bởi hình ảnh nguồn sẽ trong suốt
-    this.canvas.context.globalCompositeOperation = 'destination-out';
+    // this.canvas.context.globalCompositeOperation = 'destination-out';
     // Bây giờ bất cứ thứ gì được vẽ vào canvas sẽ sử dụng tùy chọn này
     this.emitter = this.add.particles('flame').createEmitter({
       speedX: {min: -120, max: 120},
@@ -171,17 +168,16 @@ export class DrawCurve extends Phaser.Scene {
           this.turret.angle -= 1;
           this.turret.x -= 0.5;
           this.turret.y += 0.5;
-          this.bullet.angle -= 1;
+          this.bullet.angle -= 1.3;
 
         } else if (this.cursors.down.isDown && this.turret.angle < 0) {
           console.log(this.turret);
           this.turret.angle += 1;
-          this.bullet.angle += 1;
+          this.bullet.angle += 1.3;
           this.turret.x += 0.5;
           this.turret.y -= 0.5;
         }
         if (Phaser.Input.Keyboard.JustDown(this.fireButton)) {
-          console.log('Ban');
           this.s += 1;
           this.powerTextCount.text = 'Count: ' + this.s;
           this.fire();
@@ -212,7 +208,7 @@ export class DrawCurve extends Phaser.Scene {
       this.bullet.angle += 0.5;
     }
     if (rgba.a > 0) {
-      this.canvas.context.beginPath();
+      // this.canvas.context.beginPath();
       this.canvas.context.arc(x, y, 16, 0, Math.PI * 2);
       this.canvas.context.fill();
       this.canvas.update();
@@ -254,8 +250,8 @@ export class DrawCurve extends Phaser.Scene {
     this.count--;
     if (this.count === 0) {
       console.log('YOU WIN');
-      sessionStorage.setItem('sumCount', this.s);
-      sessionStorage.setItem('gameWin', 'YOU WIN');
+      this.scene.restart();
+
     }
 
   }

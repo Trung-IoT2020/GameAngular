@@ -51,8 +51,14 @@ export class GameTzfnComponent implements OnInit {
   ms = 0;
   isRunning = false;
   timerId = 0;
-
   controllerPlayer = true;
+
+
+  sumCountHistory = 0;
+  levelHistory = 0;
+  mmHistory = 0;
+  ssHistory = 0;
+  msHistory = 0;
 
   @HostListener('touchstart', ['$event'])
   @HostListener('touchend', ['$event'])
@@ -67,8 +73,6 @@ export class GameTzfnComponent implements OnInit {
       const deltaX = touch.pageX - this.defaultTouch.x;
       const deltaY = touch.pageY - this.defaultTouch.y;
       const deltaTime = event.timeStamp - this.defaultTouch.time;
-
-      // simulte a swipe -> less than 500 ms and more than 60 px
       if (deltaTime < 500) {
         // touch movement lasted less than 500 ms
         if (Math.abs(deltaX) > 60) {
@@ -177,6 +181,16 @@ export class GameTzfnComponent implements OnInit {
         }
       }
     });
+
+    const a = sessionStorage.getItem('save') as any;
+    const b = JSON.parse(a);
+    if (b) {
+      this.sumCountHistory = b.sumCount;
+      this.levelHistory = b.level;
+      this.mmHistory = b.mm;
+      this.ssHistory = b.ss;
+      this.msHistory = b.ms;
+    }
   }
 
   addNumber(): any {
@@ -194,11 +208,11 @@ export class GameTzfnComponent implements OnInit {
   }
 
   cells(position): any {
-    return position.x >= 0 && position.x < this.places.length &&
-      position.y >= 0 && position.y < this.places.length;
+    return position.x >= 0 && position.x < this.places.length && position.y >= 0 && position.y < this.places.length;
   }
 
   checkFreeCells(): any {
+    console.log(this.places);
     for (let i = 0; i < this.places.length; i++) {
       if (this.places[i].indexOf('') >= 0) {
         return this.places[i].indexOf('') + (i * 4);
@@ -302,6 +316,8 @@ export class GameTzfnComponent implements OnInit {
         this.level = 10;
         this.win = true;
         this.isRunning = true;
+
+
         this.clickHandler();
       }
 
@@ -313,7 +329,10 @@ export class GameTzfnComponent implements OnInit {
     return (Math.floor(Math.random() * (max - min)) + min);
   }
 
+  countFail = 0;
+
   swipe(action): any {
+
     this.numberAdded = false;
     if (action === 0 || action === 3) {
       this.filterEmptyElem(this.pl[action], this.cellTransition);
@@ -335,16 +354,31 @@ export class GameTzfnComponent implements OnInit {
       this.indexAddNumber = this.addNumber();
     }
     if (this.checkFreeCells() === -1 && !this.checkMoves(this.indexAddNumber, this.pl)) {
-      console.log('Fail');
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          if ((j > 0 && this.places[i][j] !== this.places[i][j - 1]) || (i > 0 && this.places[i][j] !== this.places[i - 1][j])) {
+            this.countFail += 1;
+            this.resultGameOver(this.countFail);
+          }
+        }
+      }
+
+    }
+
+  }
+
+  resultGameOver(countFail): any {
+    if (countFail === 16) {
       this.gameOver = true;
+      console.log('Fail');
       this.isRunning = true;
       this.clickHandler();
     }
   }
 
-
   closePopup(i): any {
     if (i === 1) {
+      this.countFail = 0;
       this.mm = 0;
       this.ss = 0;
       this.ms = 0;
@@ -375,21 +409,30 @@ export class GameTzfnComponent implements OnInit {
       this.gameOver = false;
       this.sumCount = 0;
       this.controllerPlayer = true;
+      const a = sessionStorage.getItem('save') as any;
+      const b = JSON.parse(a);
+      if (b) {
+        this.sumCountHistory = b.sumCount;
+        this.levelHistory = b.level;
+        this.mmHistory = b.mm;
+        this.ssHistory = b.ss;
+        this.msHistory = b.ms;
+      }
     } else {
       this.controllerPlayer = false;
       this.win = false;
       this.gameOver = false;
     }
+
   }
 
   checkMoves(el: any, pl: any): any {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        if (
-          this.cells({y: el.y + pl[i].y, x: el.x + pl[i].x}) &&
-          this.places[i][j] === this.places[i][j + 1] ||
-          (i < 3 && this.places[i][j] === this.places[i + 1][j])
-        ) {
+        if (this.cells({
+          y: el.y + pl[i].y,
+          x: el.x + pl[i].x
+        }) && this.places[i][j] === this.places[i][j + 1] || (i < 3 && this.places[i][j] === this.places[i + 1][j])) {
           return true;
         } else if (i === 3 && this.places[i][j] === this.places[i][j + 1]) {
           return true;
@@ -422,6 +465,14 @@ export class GameTzfnComponent implements OnInit {
       clearInterval(this.timerId);
     }
     this.isRunning = !this.isRunning;
+    const dataSave = {
+      sumCount: this.sumCount,
+      level: this.level,
+      mm: this.mm,
+      ss: this.ss,
+      ms: this.ms,
+    };
+    sessionStorage.setItem('save', JSON.stringify(dataSave));
   }
 
   format(num: number): any {

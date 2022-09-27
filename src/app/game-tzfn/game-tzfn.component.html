@@ -1,4 +1,5 @@
-<div class="background-full">
+<div class="background-full" style="height: 97vh; width: 100%; position: relative">
+  <div style="height: 72px"></div>
   <div class="game-intro" style=" width: 100%!important;">
     <a class="restart-button"
        style="
@@ -18,20 +19,31 @@
     <div style="width: 60%">
       <h2 class="subtitle">Chơi <strong>Game 2048</strong></h2>
       <h4>Tham gia các con số và đến <strong>2048!</strong></h4>
-      <div class="score-level">
-        <h4>Score: {{sumCount}}</h4>
-        <h4>Level: {{level}}</h4>
 
-        <div class="stop-watch">
-          <h4>Time: </h4>
-          <div class="display">{{format(mm)}}:{{format(ss)}}:{{format(ms)}}</div>
+    </div>
+    <div class="score-level" style="margin-top: 10px;">
+      <div class="row" style="display: flex;width: 100%;">
+        <div class="col" style="justify-content: left;text-align: left; width:57%">
+          <h4>Điểm số: {{sumCount}}</h4>
+          <h4>Độ khó: {{level}}</h4>
+          <div class="stop-watch">
+            <h4>Thời gian: </h4>
+            <div class="display">{{format(mm)}}:{{format(ss)}}:{{format(ms)}}</div>
+          </div>
+        </div>
+        <div class="col" style="justify-content: right;text-align: right;">
+          <h4>Điểm cao đã đạt: {{sumCountHistory}}</h4>
+          <h4>Độ khó đã đạt: {{levelHistory}}</h4>
+          <div class="stop-watch">
+            <h4>Thời gian: </h4>
+            <div class="display">{{format(mmHistory)}}:{{format(ssHistory)}}:{{format(msHistory)}}</div>
+          </div>
         </div>
       </div>
+
     </div>
-
   </div>
-
-  <div class="field">
+  <div class="field" style="margin: 50px 0">
     <div class="place__line" *ngFor="let place of places">
       <div class="place__elem" *ngFor="let pl of place" [style.background-color]="pl ? color(pl) : null">
         <div>
@@ -41,6 +53,10 @@
       </div>
     </div>
   </div>
+  <img src="https://hi-static.fpt.vn/sys/hifpt/pnc_pdx/game-demo/archery/backgroundBottom-removebg-preview.png" alt=""
+       style="position: absolute;
+bottom: 0;
+width: 100%;">
 </div>
 <div class="popup-noti-order" [ngClass]="win ? 'show' : ''">
   <a class="bg" (click)="win = false"></a>

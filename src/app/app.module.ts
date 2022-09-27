@@ -10,6 +10,8 @@ import {FishEatBubblesComponent} from './fish-eat-bubbles/fish-eat-bubbles.compo
 import {FishEatComponent} from './fish-eat/fish-eat.component';
 import {VariableSmoothStepComponent} from './variable-smooth-step/variable-smooth-step.component';
 import {DrawCurveComponent} from './draw-curve/draw-curve.component';
+import {InfiniteRunnerComponent} from './infinite-runner/infinite-runner.component';
+import {MenuTzfnComponent} from './menu-tzfn/menu-tzfn.component';
 
 @NgModule({
   declarations: [
@@ -20,13 +22,15 @@ import {DrawCurveComponent} from './draw-curve/draw-curve.component';
     FishEatComponent,
     VariableSmoothStepComponent,
     DrawCurveComponent,
+    InfiniteRunnerComponent,
+    MenuTzfnComponent
 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    
+
   ],
   providers: [AppComponent, GameHomeComponent],
   bootstrap: [AppComponent]
